@@ -1,0 +1,19 @@
+{
+  "name": "auctionary-server",
+  "version": "0.0.1",
+  "description": "auctionary server",
+  "scripts": {
+    "dev": "ts-node ./src/server/index.ts",
+    "build": "tsc",
+    "start": "NODE_ENV=production node index.ts",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
