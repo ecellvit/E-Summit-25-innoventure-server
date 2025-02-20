@@ -48,10 +48,10 @@
 
 import { Server } from "socket.io";
 import http from "http";
-import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from "../types/types";
+import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
 
-const hostname = process.env.HOSTNAME || "localhost";
-const port = process.env.HOSTNAME || 8080;
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;
 const httpServer = http.createServer();
 
 const io = new Server<
