@@ -99,6 +99,6 @@ function startTimer() {
   }, 31000);
 }
 
-httpServer.listen(port, () => {
+httpServer.listen({port, hostname}, () => {
   console.log(`Server is running on http://${hostname}:${port}`);
 });
