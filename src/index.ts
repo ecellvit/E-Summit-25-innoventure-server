@@ -48,7 +48,7 @@
 
 import { Server } from "socket.io";
 import http from "http";
-import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
+import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "./types/types";
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
