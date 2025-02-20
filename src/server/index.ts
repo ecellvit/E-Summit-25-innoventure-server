@@ -51,7 +51,7 @@ import http from "http";
 import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from "../types/types";
 
 const hostname = process.env.HOSTNAME || "localhost";
-const port = 8080;
+const port = process.env.HOSTNAME || 8080;
 const httpServer = http.createServer();
 
 const io = new Server<
