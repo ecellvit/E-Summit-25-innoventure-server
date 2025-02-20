@@ -52,7 +52,10 @@ import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from ".
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
-const httpServer = http.createServer();
+const httpServer = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Socket.IO server is running');
+});
 
 const io = new Server<
   ClientToServerEvents,
@@ -99,6 +102,6 @@ function startTimer() {
   }, 31000);
 }
 
-httpServer.listen({port, hostname}, () => {
+httpServer.listen(port, () => {
   console.log(`Server is running on http://${hostname}:${port}`);
 });
