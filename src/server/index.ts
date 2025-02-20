@@ -50,7 +50,7 @@ import { Server } from "socket.io";
 import http from "http";
 import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
 
-const hostname = process.env.HOSTNAME;
+const hostname = process.env.HOSTNAME || '0.0.0.0';
 const port = process.env.PORT;
 const httpServer = http.createServer();
 
