@@ -49,6 +49,8 @@
 import { Server, Socket } from "socket.io";
 import http from "http";
 import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
+import { dbConnect } from "../lib/dbConnect";
+import { Users } from "../models/user.model";
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
@@ -90,11 +92,13 @@ io.on("connection", (socket) => {
   });
 });
 
-function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
+async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
+  const event1Registrations = await Users.countDocuments({ events: 1 });
   const timer = setInterval(() => {
     const date = new Date();
-    console.log("Date:", date)
+    console.log("registrations:", event1Registrations);
+    console.log("Date:", date);
     socket.emit("timer", { message: "30 seconds passed", timestamp: date });
   }, 2000);
   
@@ -104,6 +108,11 @@ function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, I
   }, 31000);
 }
 
-httpServer.listen(port, () => {
-  console.log(`Server is running on http://${hostname}:${port}`);
+httpServer.listen(port, async () => {
+  try {
+    await dbConnect();
+    console.log(`Server is running on http://${hostname}:${port}`);
+  } catch (error) {
+    console.log(error);
+  }
 });
