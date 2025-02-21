@@ -99,7 +99,7 @@ async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEve
     const date = new Date();
     console.log("registrations:", event1Registrations);
     console.log("Date:", date);
-    socket.emit("timer", { message: "30 seconds passed", timestamp: date });
+    socket.emit("timer", { message: `There are ${event1Registrations} registrations in event 1`, timestamp: date });
   }, 2000);
   
   setTimeout(() => {
