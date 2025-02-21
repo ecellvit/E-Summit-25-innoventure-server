@@ -46,13 +46,16 @@
 //     });
 // });
 
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import http from "http";
-import { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from "../types/types";
+import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
 
-const hostname = process.env.HOSTNAME || "localhost";
-const port = 8080;
-const httpServer = http.createServer();
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;
+const httpServer = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Socket.IO server is running');
+});
 
 const io = new Server<
   ClientToServerEvents,
@@ -62,7 +65,9 @@ const io = new Server<
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
+    credentials: true
   },
+  transports: ['websocket', 'polling']
 });
 
 io.on("connection", (socket) => {
@@ -73,7 +78,7 @@ io.on("connection", (socket) => {
     if (name == "Darsh" && age == 19) {
       console.log("Name:", name);
       console.log("Age:", age);
-      startTimer();
+      startTimer(socket);
     } else {
       console.log("Invalid name or age");
       socket.emit("noArg");
@@ -85,12 +90,12 @@ io.on("connection", (socket) => {
   });
 });
 
-function startTimer() {
+function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
   const timer = setInterval(() => {
     const date = new Date();
     console.log("Date:", date)
-    io.emit("timer", { message: "30 seconds passed", timestamp: date });
+    socket.emit("timer", { message: "30 seconds passed", timestamp: date });
   }, 2000);
   
   setTimeout(() => {
