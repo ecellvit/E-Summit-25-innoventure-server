@@ -46,7 +46,7 @@
 //     });
 // });
 
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import http from "http";
 import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
 
@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
     if (name == "Darsh" && age == 19) {
       console.log("Name:", name);
       console.log("Age:", age);
-      startTimer();
+      startTimer(socket);
     } else {
       console.log("Invalid name or age");
       socket.emit("noArg");
@@ -90,12 +90,12 @@ io.on("connection", (socket) => {
   });
 });
 
-function startTimer() {
+function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
   const timer = setInterval(() => {
     const date = new Date();
     console.log("Date:", date)
-    io.emit("timer", { message: "30 seconds passed", timestamp: date });
+    socket.emit("timer", { message: "30 seconds passed", timestamp: date });
   }, 2000);
   
   setTimeout(() => {
