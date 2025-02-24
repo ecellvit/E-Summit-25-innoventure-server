@@ -42,7 +42,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("purchase", async (elementId)=> {
+    console.log(elementId);
     const marketData = await MarketModel.findOne({ elementId: elementId });
+    console.log(marketData);
     if (!marketData || !marketData.marketPrice) {
       io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
       return;
