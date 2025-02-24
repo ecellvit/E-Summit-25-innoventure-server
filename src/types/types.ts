@@ -11,7 +11,7 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   hello: (data: SocketData) => void;
-  purchase: (data: {elementId: number}) => void;
+  purchase: (elementId: number) => void;
 }
 
 export interface InterServerEvents {

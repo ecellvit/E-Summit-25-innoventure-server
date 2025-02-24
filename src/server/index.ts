@@ -41,13 +41,13 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("purchase", async (data)=> {
-    const marketData = await MarketModel.findOne({ elementId: data.elementId });
+  socket.on("purchase", async (elementId)=> {
+    const marketData = await MarketModel.findOne({ elementId: elementId });
     if (!marketData || !marketData.marketPrice) {
-      io.emit("marketPrice", {elementId: data.elementId, marketPrice: resourceData[data.elementId].base})
+      io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
       return;
     }
-    io.emit("marketPrice", {elementId: data.elementId, marketPrice: marketData.marketPrice})
+    io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
   })
 
   socket.on("disconnect", () => {
