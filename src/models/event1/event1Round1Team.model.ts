@@ -1,7 +1,9 @@
 import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
 export interface round1Qualified extends Document {
-    teamId: ObjectId;
+    teamLeaderId: ObjectId;
+    teamLeaderName: string;
+    teamLeaderEmail: string;
     teamName: string;
     primaryElement: number;
     secondaryElement: number;
@@ -15,16 +17,28 @@ export interface round1Qualified extends Document {
     secondaryStartTime: Date;
     lease1StartTime: Date;
     lease2StartTime: Date;
+    hasUpgraded: boolean;
     wallet: number;
     portfolio: number[];
+    page: number;
+    startTime: Date;
 }
 
 const TeamSchema: Schema<round1Qualified> = new Schema(
 {
-    teamId: {
+    teamLeaderId: {
         type: Schema.Types.ObjectId,
-        ref: "TeamsEvent1",
-        required: [true, "Team name is required"],
+        ref: "Users",
+        required: [true, "Team leader is required"],
+    },
+    teamLeaderName: {
+        type: String,
+        required: [true, "Team leader name is required"],
+    },
+    teamLeaderEmail: {
+        type: String,
+        required: [true, "Team leader email is required"],
+        unique: true,
     },
     teamName:{
         type: String,
@@ -66,6 +80,10 @@ const TeamSchema: Schema<round1Qualified> = new Schema(
     lease2StartTime: {
         type: Date,
     },
+    hasUpgraded: {
+        type: Boolean,
+        default: false,
+    },
     wallet:
     {
         type: Number,
@@ -75,7 +93,16 @@ const TeamSchema: Schema<round1Qualified> = new Schema(
     {
         type: [Number],
         required: [true, "Portfolio is required"],
-    }
+    },
+    page:
+    {
+        type: Number,
+        required: [true, "Page is required"],
+    },
+    startTime: {
+        type: Date,
+        default: Date.now,
+    },
 },
     { collection: "TeamsEvent1Round1" }
 );
