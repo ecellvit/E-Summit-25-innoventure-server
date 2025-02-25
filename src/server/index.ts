@@ -29,6 +29,7 @@ const io = new Server<
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
+  socket.join("nahardarsh54@gmail.com");
 
   socket.on("hello", (data) => {
     const { name, age } = data;
@@ -92,7 +93,7 @@ io.on("connection", (socket) => {
       }
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
-      socket.emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to("nahardarsh54@gmail.com").emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 2000);
     
     setTimeout(() => {
