@@ -41,21 +41,26 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("purchase", async (elementId)=> {
-    console.log(elementId);
-    const marketData = await MarketModel.findOne({ elementId: elementId });
-    console.log(marketData);
-    if (!marketData || !marketData.marketPrice) {
-      io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
-      return;
-    }
-    io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
-  })
+  socket.on("purchase", purchaseHandler)
 
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });
 });
+
+//? SOCKET EVENT HANDLERS
+
+//* handle purchase event
+const purchaseHandler = async (elementId: number)=> {
+  console.log(elementId);
+  const marketData = await MarketModel.findOne({ elementId: elementId });
+  console.log(marketData);
+  if (!marketData || !marketData.marketPrice) {
+    io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
+    return;
+  }
+  io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+}
 
 async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
@@ -72,6 +77,9 @@ async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEve
     console.log("Timer stopped after 30 seconds");
   }, 31000);
 }
+
+
+//? HTTP SERVER CREATION
 
 httpServer.listen(port, async () => {
   try {
