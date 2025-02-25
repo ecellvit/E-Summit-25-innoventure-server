@@ -6,10 +6,12 @@ export interface ServerToClientEvents {
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
   timer: (data: TimerData) => void;
+  marketPrice: (data: {elementId: number, marketPrice: number}) => void;
 }
 
 export interface ClientToServerEvents {
   hello: (data: SocketData) => void;
+  purchase: (elementId: number) => void;
 }
 
 export interface InterServerEvents {

@@ -1,54 +1,10 @@
-// //todo: (1) Configure and understand cors settings
-
-// import { createServer } from "node:http";
-// import next from "next";
-// import { Server } from "socket.io";
-
-// //* dev = false means the server is running in production mode
-// const dev = process.env.NODE_ENV !== "production";
-
-// //* hostname refers to the hostname (or domain) where the Next.js server will be available.
-// const hostname = process.env.HOSTNAME || "localhost";
-
-// //* port refers to the port where the Next.js server will be available.
-// const port = 8080;
-
-// // this creates a next server
-// const app = next({ dev, hostname, port });
-// const handler = app.getRequestHandler();
-
-// app.prepare().then(() => {
-//   const httpServer = createServer(handler);
-
-//   const io = new Server<
-//     ClientToServerEvents,
-//     ServerToClientEvents,
-//     InterServerEvents,
-//     SocketData
-//   >(httpServer, {
-//     cors: {
-//       origin: "*",
-//       methods: ["GET", "POST"],
-//     },
-//   });
-
-//   io.on("connection", (socket) => {
-//     // ...
-//   });
-
-//   httpServer
-//     .once("error", (err) => {
-//       console.error(err);
-//       process.exit(1);
-//     })
-//     .listen(port, () => {
-//       console.log(`> Ready on http://${hostname}:${port}`);
-//     });
-// });
-
 import { Server, Socket } from "socket.io";
 import http from "http";
 import { ClientToServerEvents, ServerToClientEvents, InterServerEvents } from "../types/types";
+import { dbConnect } from "../lib/dbConnect";
+import { Users } from "../models/user.model";
+import MarketModel from "../models/event1/CommonInfo.model";
+import resourceData from "../constants/round1/element.json";
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
@@ -85,17 +41,30 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("purchase", async (elementId)=> {
+    console.log(elementId);
+    const marketData = await MarketModel.findOne({ elementId: elementId });
+    console.log(marketData);
+    if (!marketData || !marketData.marketPrice) {
+      io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
+      return;
+    }
+    io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+  })
+
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });
 });
 
-function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
+async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
+  const event1Registrations = await Users.countDocuments({ events: 1 });
   const timer = setInterval(() => {
     const date = new Date();
-    console.log("Date:", date)
-    socket.emit("timer", { message: "30 seconds passed", timestamp: date });
+    console.log("registrations:", event1Registrations);
+    console.log("Date:", date);
+    socket.emit("timer", { message: `There are ${event1Registrations} registrations in event 1`, timestamp: date });
   }, 2000);
   
   setTimeout(() => {
@@ -104,6 +73,11 @@ function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, I
   }, 31000);
 }
 
-httpServer.listen(port, () => {
-  console.log(`Server is running on http://${hostname}:${port}`);
+httpServer.listen(port, async () => {
+  try {
+    await dbConnect();
+    console.log(`Server is running on http://${hostname}:${port}`);
+  } catch (error) {
+    console.log(error);
+  }
 });
