@@ -31,7 +31,9 @@ io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
   console.log(socket.handshake.auth.user);
   const sessionUser = socket.handshake.auth.user;
-  socket.join(sessionUser.email);
+  if (sessionUser && sessionUser.email) {
+    socket.join(sessionUser.email);
+  }
 
   socket.on("hello", (data) => {
     const { name, age } = data;
