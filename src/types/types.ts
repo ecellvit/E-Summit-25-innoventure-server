@@ -3,15 +3,18 @@
 
 export interface ServerToClientEvents {
   noArg: () => void;
+  error: (message: string) => void;
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
   timer: (data: TimerData) => void;
   marketPrice: (data: {elementId: number, marketPrice: number}) => void;
+  portfolioUpdate: (data: {portfolio: number[]}) => void;
 }
 
 export interface ClientToServerEvents {
   hello: (data: SocketData) => void;
   purchase: (elementId: number) => void;
+  lease1: (elementId: number) => void;
 }
 
 export interface InterServerEvents {
