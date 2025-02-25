@@ -29,8 +29,9 @@ const io = new Server<
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
-  console.log(socket.handshake.auth);
-  socket.join("nahardarsh54@gmail.com");
+  console.log(socket.handshake.auth.user);
+  const sessionUser = socket.handshake.auth.user;
+  socket.join(sessionUser.email);
 
   socket.on("hello", (data) => {
     const { name, age } = data;
@@ -66,7 +67,7 @@ io.on("connection", (socket) => {
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
 
-    const team = await TeamModelRound1.findOne({ teamLeaderEmail: "nahardarsh54@gmail.com" });
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
     if (!team) {
       console.log("Team not found");
       socket.emit("error", "Team not found");
@@ -82,7 +83,7 @@ io.on("connection", (socket) => {
 
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: "nahardarsh54@gmail.com" },
+        { teamLeaderEmail: sessionUser.email },
         { $inc: { [`portfolio.${elementId}`]: lease1Rate } },
         { new: true }
       );
@@ -94,7 +95,7 @@ io.on("connection", (socket) => {
       }
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
-      socket.to("nahardarsh54@gmail.com").emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 2000);
     
     setTimeout(() => {
