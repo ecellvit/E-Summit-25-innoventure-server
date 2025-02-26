@@ -28,7 +28,7 @@ const io = new Server<
 });
 
 io.on("connection", (socket) => {
-  console.log("A user connected:", socket);
+  console.log("A user connected:", socket.id);
   console.log(socket.handshake.auth.user);
   const sessionUser = socket.handshake.auth.user;
   if (sessionUser && sessionUser.email) {
