@@ -5,6 +5,7 @@ import { dbConnect } from "../lib/dbConnect";
 import { Users } from "../models/user.model";
 import MarketModel from "../models/event1/CommonInfo.model";
 import resourceData from "../constants/round1/element.json";
+import TeamModelRound1 from "../models/event1/event1Round1Team.model";
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
@@ -28,6 +29,11 @@ const io = new Server<
 
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
+  console.log(socket.handshake.auth.user);
+  const sessionUser = socket.handshake.auth.user;
+  if (sessionUser && sessionUser.email) {
+    socket.join(sessionUser.email);
+  }
 
   socket.on("hello", (data) => {
     const { name, age } = data;
@@ -41,22 +47,244 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("purchase", async (elementId)=> {
-    console.log(elementId);
+  //* PRIMARY RESOURCE EVENT HANDLER *//
+  socket.on("primary", async (elementId: number)=> {
+    //? Update the market data
     const marketData = await MarketModel.findOne({ elementId: elementId });
-    console.log(marketData);
     if (!marketData || !marketData.marketPrice) {
       io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
       return;
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
-  })
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+
+    const primaryRate = team.primaryRate;
+    if (!primaryRate) {
+      console.log("primary rate not found");
+      socket.emit("error", "primary rate not found");
+      return;
+    }
+
+    const timer = setInterval(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $inc: { [`portfolio.${elementId}`]: primaryRate } },
+        { new: true }
+      );
+
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      
+      console.log("Updated team portfolio:", updatedTeam.portfolio);
+      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+    }, 5*1000);
+    
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { primaryRate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      clearInterval(timer);
+      console.log("Primary element timer stopped after 2 minutes");
+      socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
+    }, 2*60*1000);
+  });
+
+  //* SECONDARY RESOURCE EVENT HANDLER *//
+  socket.on("secondary", async (elementId: number)=> {
+    //? Update the market data
+    const marketData = await MarketModel.findOne({ elementId: elementId });
+    if (!marketData || !marketData.marketPrice) {
+      io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
+      return;
+    }
+    io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+
+    const secondaryRate = team.secondaryRate;
+    if (!secondaryRate) {
+      console.log("secondary rate not found");
+      socket.emit("error", "secondary rate not found");
+      return;
+    }
+
+    const timer = setInterval(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $inc: { [`portfolio.${elementId}`]: secondaryRate } },
+        { new: true }
+      );
+
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      
+      console.log("Updated team portfolio:", updatedTeam.portfolio);
+      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+    }, 5*1000);
+    
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { secondaryRate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      clearInterval(timer);
+      console.log("Secondary element timer stopped after 2 minutes");
+      socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
+    }, 2*60*1000);
+  });
+
+  //* LEASE1 EVENT HANDLER *//
+  socket.on("lease1", async (elementId: number)=> {
+    //? Update the market data
+    const marketData = await MarketModel.findOne({ elementId: elementId });
+    if (!marketData || !marketData.marketPrice) {
+      io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
+      return;
+    }
+    io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+
+    const lease1Rate = team.lease1Rate;
+    if (!lease1Rate) {
+      console.log("lease1 rate not found");
+      socket.emit("error", "lease1 rate not found");
+      return;
+    }
+
+    const timer = setInterval(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $inc: { [`portfolio.${elementId}`]: lease1Rate } },
+        { new: true }
+      );
+
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      
+      console.log("Updated team portfolio:", updatedTeam.portfolio);
+      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+    }, 2*1000);
+    
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { lease1Rate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      clearInterval(timer);
+      console.log("Lease 1 timer stopped after 30 seconds");
+      socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
+    }, 30*1000);
+  });
+
+  //* LEASE2 EVENT HANDLER *//
+  socket.on("lease2", async (elementId: number)=> {
+    //? Update the market data
+    const marketData = await MarketModel.findOne({ elementId: elementId });
+    if (!marketData || !marketData.marketPrice) {
+      io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
+      return;
+    }
+    io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+
+    const lease2Rate = team.lease2Rate;
+    if (!lease2Rate) {
+      console.log("lease2 rate not found");
+      socket.emit("error", "lease2 rate not found");
+      return;
+    }
+
+    const timer = setInterval(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $inc: { [`portfolio.${elementId}`]: lease2Rate } },
+        { new: true }
+      );
+
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      
+      console.log("Updated team portfolio:", updatedTeam.portfolio);
+      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+    }, 2*1000);
+    
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { lease2Rate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      clearInterval(timer);
+      console.log("Lease 2 timer stopped after 30 seconds");
+      socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
+    }, 30*1000);
+  });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });
 });
 
+//* TIMER EVENT *//
 async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
   const event1Registrations = await Users.countDocuments({ events: 1 });
@@ -65,13 +293,16 @@ async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEve
     console.log("registrations:", event1Registrations);
     console.log("Date:", date);
     socket.emit("timer", { message: `There are ${event1Registrations} registrations in event 1`, timestamp: date });
-  }, 2000);
+  }, 2*1000);
   
   setTimeout(() => {
     clearInterval(timer);
     console.log("Timer stopped after 30 seconds");
-  }, 31000);
+  }, 30*1000);
 }
+
+
+//? HTTP SERVER CREATION
 
 httpServer.listen(port, async () => {
   try {

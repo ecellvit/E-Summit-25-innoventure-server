@@ -9,6 +9,7 @@ export interface Team extends Document {
   teamMembers: ObjectId[];
   isQualified?: boolean;
   createdAt?: Date,
+  round: number;
 }
 
 const TeamSchema: Schema<Team> = new Schema(
@@ -51,6 +52,9 @@ const TeamSchema: Schema<Team> = new Schema(
       type: Date,
       default: Date.now,
     },
+    round: {
+      type: Number,
+    }
   },
   { collection: "TeamsEvent1" }
 );
