@@ -6,6 +6,7 @@ export interface MarketData extends Document {
     currentTeams: number;
     marketPrice: number;
     basePrice: number;
+    marketHistory: number[];
 }
 
 const MarketSchema: Schema<MarketData> = new Schema(
@@ -27,6 +28,10 @@ const MarketSchema: Schema<MarketData> = new Schema(
             type: Number,
             required: true,
         },
+        marketHistory: {
+            type: [Number],
+            required: true,
+        }
     },
     { collection: "MarketData" }
 );
