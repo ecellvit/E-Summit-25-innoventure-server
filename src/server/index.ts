@@ -57,24 +57,25 @@ io.on("connection", (socket) => {
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
 
-    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
-    if (!team) {
-      console.log("Team not found");
-      socket.emit("error", "Team not found");
-      return;
-    }
-
-    const primaryRate = team.primaryRate;
-    if (!primaryRate) {
-      console.log("primary rate not found");
-      socket.emit("error", "primary rate not found");
-      return;
-    }
-
+    
     const timer = setInterval(async () => {
+      const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+      if (!team) {
+        console.log("Team not found");
+        socket.emit("error", "Team not found");
+        return;
+      }
+  
+      const primaryRate = team.primaryRate;
+      if (!primaryRate) {
+        console.log("primary rate not found");
+        socket.emit("error", "primary rate not found");
+        return;
+      }
+      
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
         { teamLeaderEmail: sessionUser.email },
-        { $inc: { [`portfolio.${elementId}`]: "$primaryRate" } },
+        { $inc: { [`portfolio.${elementId}`]: primaryRate } },
         { new: true }
       );
 
