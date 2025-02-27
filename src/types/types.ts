@@ -14,7 +14,9 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   hello: (data: SocketData) => void;
   primary: (elementId: number) => void;
+  secondary: (elementId: number) => void;
   lease1: (elementId: number) => void;
+  lease2: (elementId: number) => void;
 }
 
 export interface InterServerEvents {
