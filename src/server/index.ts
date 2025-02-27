@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
         { teamLeaderEmail: sessionUser.email },
-        { $inc: { [`portfolio.${elementId}`]: primaryRate } },
+        { $inc: { [`portfolio.${elementId}`]: "$primaryRate" } },
         { new: true }
       );
 
