@@ -88,7 +88,17 @@ io.on("connection", (socket) => {
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 5*1000);
     
-    setTimeout(() => {
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { primaryRate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
       clearInterval(timer);
       console.log("Primary element timer stopped after 2 minutes");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
@@ -136,7 +146,17 @@ io.on("connection", (socket) => {
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 5*1000);
     
-    setTimeout(() => {
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { secondaryRate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
       clearInterval(timer);
       console.log("Secondary element timer stopped after 2 minutes");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
@@ -184,7 +204,17 @@ io.on("connection", (socket) => {
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 2*1000);
     
-    setTimeout(() => {
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { lease1Rate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
       clearInterval(timer);
       console.log("Lease 1 timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
@@ -232,7 +262,17 @@ io.on("connection", (socket) => {
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 2*1000);
     
-    setTimeout(() => {
+    setTimeout(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { lease2Rate: 0 } },
+        { new: true }
+      );
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
       clearInterval(timer);
       console.log("Lease 2 timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
@@ -244,6 +284,7 @@ io.on("connection", (socket) => {
   });
 });
 
+//* TIMER EVENT *//
 async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, any>) {
   console.log("Starting timer...");
   const event1Registrations = await Users.countDocuments({ events: 1 });
