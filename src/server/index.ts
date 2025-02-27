@@ -47,16 +47,52 @@ io.on("connection", (socket) => {
     }
   });
 
-  //* PURCHASE EVENT HANDLER *//
-  socket.on("purchase", async (elementId: number)=> {
-    console.log(elementId);
+  //* PRIMARY RESOURCE EVENT HANDLER *//
+  socket.on("primary", async (elementId: number)=> {
+    //? Update the market data
     const marketData = await MarketModel.findOne({ elementId: elementId });
-    console.log(marketData);
     if (!marketData || !marketData.marketPrice) {
       io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
       return;
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+
+    const primaryRate = team.primaryRate;
+    if (!primaryRate) {
+      console.log("primary rate not found");
+      socket.emit("error", "primary rate not found");
+      return;
+    }
+
+    const timer = setInterval(async () => {
+      const updatedTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $inc: { [`portfolio.${elementId}`]: primaryRate } },
+        { new: true }
+      );
+
+      if (!updatedTeam) {
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
+        return;
+      }
+      
+      console.log("Updated team portfolio:", updatedTeam.portfolio);
+      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+    }, 5000);
+    
+    setTimeout(() => {
+      clearInterval(timer);
+      console.log("Timer stopped after 30 seconds");
+      socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
+    }, 121000);
   });
 
   //* LEASE1 EVENT HANDLER *//
@@ -91,8 +127,8 @@ io.on("connection", (socket) => {
       );
 
       if (!updatedTeam) {
-        console.log("Team not found");
-        socket.emit("error", "Team not found");
+        console.log("Team not updated");
+        socket.emit("error", "Team not updated");
         return;
       }
       

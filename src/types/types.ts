@@ -13,7 +13,7 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   hello: (data: SocketData) => void;
-  purchase: (elementId: number) => void;
+  primary: (elementId: number) => void;
   lease1: (elementId: number) => void;
 }
 
