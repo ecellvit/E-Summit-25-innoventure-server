@@ -86,13 +86,13 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 5000);
+    }, 5*1000);
     
     setTimeout(() => {
       clearInterval(timer);
-      console.log("Timer stopped after 30 seconds");
+      console.log("Timer stopped after 2 minutes");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 121000);
+    }, 2*60*1000);
   });
 
   //* LEASE1 EVENT HANDLER *//
@@ -134,13 +134,13 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 2000);
+    }, 2*1000);
     
     setTimeout(() => {
       clearInterval(timer);
       console.log("Timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 31000);
+    }, 30*1000);
   });
 
   socket.on("disconnect", () => {
@@ -156,12 +156,12 @@ async function startTimer(socket: Socket<ClientToServerEvents, ServerToClientEve
     console.log("registrations:", event1Registrations);
     console.log("Date:", date);
     socket.emit("timer", { message: `There are ${event1Registrations} registrations in event 1`, timestamp: date });
-  }, 2000);
+  }, 2*1000);
   
   setTimeout(() => {
     clearInterval(timer);
     console.log("Timer stopped after 30 seconds");
-  }, 31000);
+  }, 30*1000);
 }
 
 
