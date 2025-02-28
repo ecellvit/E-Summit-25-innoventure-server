@@ -33,8 +33,8 @@ io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
   console.log(socket.handshake.auth.user);
   const sessionUser = socket.handshake.auth.user;
-  if (sessionUser && sessionUser.email) {
-    socket.join(sessionUser.email);
+  if (sessionUser && sessionUser?.email) {
+    socket.join(sessionUser?.email);
   }
 
   socket.on("hello", (data) => {
@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
 
     
     const timer = setInterval(async () => {
-      const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+      const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
       if (!team) {
         console.log("Team not found");
         socket.emit("error", "Team not found");
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
       }
       
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $inc: { [`portfolio.${elementId}`]: primaryRate } },
         { new: true }
       );
@@ -88,12 +88,12 @@ io.on("connection", (socket) => {
       }
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
-      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 10*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $set: { primaryRate: 0 } },
         { new: true }
       );
@@ -118,7 +118,7 @@ io.on("connection", (socket) => {
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
 
-    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
     if (!team) {
       console.log("Team not found");
       socket.emit("error", "Team not found");
@@ -134,7 +134,7 @@ io.on("connection", (socket) => {
 
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $inc: { [`portfolio.${elementId}`]: secondaryRate } },
         { new: true }
       );
@@ -146,12 +146,12 @@ io.on("connection", (socket) => {
       }
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
-      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 10*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $set: { secondaryRate: 0 } },
         { new: true }
       );
@@ -176,7 +176,7 @@ io.on("connection", (socket) => {
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
 
-    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
     if (!team) {
       console.log("Team not found");
       socket.emit("error", "Team not found");
@@ -192,7 +192,7 @@ io.on("connection", (socket) => {
 
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $inc: { [`portfolio.${elementId}`]: lease1Rate } },
         { new: true }
       );
@@ -204,12 +204,12 @@ io.on("connection", (socket) => {
       }
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
-      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 5*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $set: { lease1Rate: 0 } },
         { new: true }
       );
@@ -234,7 +234,7 @@ io.on("connection", (socket) => {
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
 
-    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
     if (!team) {
       console.log("Team not found");
       socket.emit("error", "Team not found");
@@ -250,7 +250,7 @@ io.on("connection", (socket) => {
 
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $inc: { [`portfolio.${elementId}`]: lease2Rate } },
         { new: true }
       );
@@ -262,12 +262,12 @@ io.on("connection", (socket) => {
       }
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
-      socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
     }, 5*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $set: { lease2Rate: 0 } },
         { new: true }
       );
@@ -284,7 +284,7 @@ io.on("connection", (socket) => {
 
   //* UPGRADE EVENT HANDLER *//
   socket.on("upgrade", async () => {
-    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
     if (!team) {
       console.log("Team not found");
       socket.emit("error", "Team not found");
@@ -296,7 +296,7 @@ io.on("connection", (socket) => {
     // Wait for 30 seconds before resetting it back
     setTimeout(async () => {
       const resetTeam = await TeamModelRound1.findOneAndUpdate(
-        { teamLeaderEmail: sessionUser.email },
+        { teamLeaderEmail: sessionUser?.email },
         { $set: { primaryRate: originalRate } },
         { new: true }
       );
