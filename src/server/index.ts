@@ -282,6 +282,35 @@ io.on("connection", (socket) => {
     }, 30*1000);
   });
 
+  //* UPGRADE EVENT HANDLER *//
+  socket.on("upgrade", async () => {
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+  
+    const originalRate = resourceData[team.primaryElement]; // Store the original rate
+  
+    // Wait for 30 seconds before resetting it back
+    setTimeout(async () => {
+      const resetTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { primaryRate: originalRate } },
+        { new: true }
+      );
+  
+      if (!resetTeam) {
+        console.log("Failed to restore primary rate");
+        socket.emit("error", "Failed to restore primary rate");
+        return;
+      }
+  
+      console.log(`Primary rate reverted to ${originalRate} after upgrade`);
+    }, 30*1000);
+  });  
+
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });

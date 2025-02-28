@@ -17,6 +17,7 @@ export interface ClientToServerEvents {
   secondary: (elementId: number) => void;
   lease1: (elementId: number) => void;
   lease2: (elementId: number) => void;
+  upgrade: () => void;
 }
 
 export interface InterServerEvents {
