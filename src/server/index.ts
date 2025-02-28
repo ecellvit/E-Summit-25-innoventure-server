@@ -35,10 +35,8 @@ io.on("connection", (socket) => {
   const sessionUser = socket.handshake.auth.user;
   if (sessionUser && sessionUser.email) {
     socket.join(sessionUser.email);
-  } else {
-    socket.disconnect();
   }
-
+  
   socket.on("hello", (data) => {
     const { name, age } = data;
     if (name == "Darsh" && age == 19) {
