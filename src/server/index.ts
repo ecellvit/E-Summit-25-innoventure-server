@@ -89,7 +89,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 5*1000);
+    }, 10*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -147,7 +147,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 5*1000);
+    }, 10*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -205,7 +205,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 2*1000);
+    }, 5*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -221,7 +221,7 @@ io.on("connection", (socket) => {
       clearInterval(timer);
       console.log("Lease 1 timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 30*1000);
+    }, 60*1000);
   });
 
   //* LEASE2 EVENT HANDLER *//
@@ -263,7 +263,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 2*1000);
+    }, 5*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -279,8 +279,37 @@ io.on("connection", (socket) => {
       clearInterval(timer);
       console.log("Lease 2 timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 30*1000);
+    }, 60*1000);
   });
+
+  //* UPGRADE EVENT HANDLER *//
+  socket.on("upgrade", async () => {
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+  
+    const originalRate = resourceData[team.primaryElement].rate; // Store the original rate
+  
+    // Wait for 30 seconds before resetting it back
+    setTimeout(async () => {
+      const resetTeam = await TeamModelRound1.findOneAndUpdate(
+        { teamLeaderEmail: sessionUser.email },
+        { $set: { primaryRate: originalRate } },
+        { new: true }
+      );
+  
+      if (!resetTeam) {
+        console.log("Failed to restore primary rate");
+        socket.emit("error", "Failed to restore primary rate");
+        return;
+      }
+  
+      console.log(`Primary rate reverted to ${originalRate} after upgrade`);
+    }, 30*1000);
+  });  
 
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
