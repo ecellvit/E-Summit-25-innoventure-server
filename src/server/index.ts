@@ -29,10 +29,23 @@ const io = new Server<
   pingTimeout: 30*1000
 });
 
+// Middleware to validate user auth
+io.use((socket, next) => {
+  const user = socket.handshake.auth.user;
+  if (!user || !user.email) {
+    return next(new Error("Authentication failed: User data missing"));
+  }
+  
+  // Store validated user in socket data for later access
+  socket.data.user = user;
+  next();
+});
+
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
-  console.log(socket.handshake.auth.user);
-  const sessionUser = socket.handshake.auth.user;
+  console.log(socket.data.user);
+  
+  const sessionUser = socket.data.user;
   if (sessionUser && sessionUser?.email) {
     socket.join(sessionUser?.email);
   }
