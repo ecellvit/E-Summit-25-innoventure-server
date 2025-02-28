@@ -35,6 +35,8 @@ io.on("connection", (socket) => {
   const sessionUser = socket.handshake.auth.user;
   if (sessionUser && sessionUser.email) {
     socket.join(sessionUser.email);
+  } else {
+    socket.disconnect();
   }
 
   socket.on("hello", (data) => {
@@ -89,7 +91,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 5*1000);
+    }, 10*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -147,7 +149,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 5*1000);
+    }, 10*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -205,7 +207,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 2*1000);
+    }, 5*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -221,7 +223,7 @@ io.on("connection", (socket) => {
       clearInterval(timer);
       console.log("Lease 1 timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 30*1000);
+    }, 60*1000);
   });
 
   //* LEASE2 EVENT HANDLER *//
@@ -263,7 +265,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-    }, 2*1000);
+    }, 5*1000);
     
     setTimeout(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -279,7 +281,7 @@ io.on("connection", (socket) => {
       clearInterval(timer);
       console.log("Lease 2 timer stopped after 30 seconds");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 30*1000);
+    }, 60*1000);
   });
 
   //* UPGRADE EVENT HANDLER *//
