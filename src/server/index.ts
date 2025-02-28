@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
   if (sessionUser && sessionUser.email) {
     socket.join(sessionUser.email);
   }
-  
+
   socket.on("hello", (data) => {
     const { name, age } = data;
     if (name == "Darsh" && age == 19) {
@@ -291,7 +291,7 @@ io.on("connection", (socket) => {
       return;
     }
   
-    const originalRate = resourceData[team.primaryElement]; // Store the original rate
+    const originalRate = resourceData[team.primaryElement].rate; // Store the original rate
   
     // Wait for 30 seconds before resetting it back
     setTimeout(async () => {
