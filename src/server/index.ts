@@ -324,6 +324,28 @@ io.on("connection", (socket) => {
     }, 30*1000);
   });  
 
+  //* SELL EVENT HANDLER *//
+  socket.on("sell", async ({ elementId, quantityLeft })=> {
+    if (quantityLeft === 0) {
+      //? Update the market data
+      const marketData = await MarketModel.findOne({ elementId: elementId });
+      if (!marketData || !marketData.marketPrice) {
+        io.emit("marketPrice", {elementId: elementId, marketPrice: resourceData[elementId].base})
+        return;
+      }
+      io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
+    }
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
+    if (!team) {
+      console.log("Team not found on selling");
+      socket.emit("error", "Team not found on selling");
+      return;
+    }
+    
+    socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: team.portfolio});
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });

@@ -18,6 +18,7 @@ export interface ClientToServerEvents {
   lease1: (elementId: number) => void;
   lease2: (elementId: number) => void;
   upgrade: () => void;
+  sell: (data: {elementId: number, quantityLeft: number}) => void;
 }
 
 export interface InterServerEvents {
