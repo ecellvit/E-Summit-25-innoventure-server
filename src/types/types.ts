@@ -9,6 +9,7 @@ export interface ServerToClientEvents {
   timer: (data: TimerData) => void;
   marketPrice: (data: {elementId: number, marketPrice: number}) => void;
   portfolioUpdate: (data: {portfolio: number[]}) => void;
+  walletUpdate: (balance: number) => void;
 }
 
 export interface ClientToServerEvents {

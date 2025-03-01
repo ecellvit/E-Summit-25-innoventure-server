@@ -102,6 +102,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 10*1000);
     
     setTimeout(async () => {
@@ -160,6 +161,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 10*1000);
     
     setTimeout(async () => {
@@ -218,6 +220,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 5*1000);
     
     setTimeout(async () => {
@@ -276,6 +279,7 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
+      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 5*1000);
     
     setTimeout(async () => {
@@ -304,6 +308,8 @@ io.on("connection", (socket) => {
       return;
     }
   
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
+    
     const originalRate = resourceData[team.primaryElement].rate; // Store the original rate
   
     // Wait for 30 seconds before resetting it back
@@ -326,6 +332,7 @@ io.on("connection", (socket) => {
 
   //* SELL EVENT HANDLER *//
   socket.on("sell", async ({ elementId, quantityLeft })=> {
+    console.log(`Selling ${elementId}, quantity left =`, quantityLeft);
     if (quantityLeft === 0) {
       //? Update the market data
       const marketData = await MarketModel.findOne({ elementId: elementId });
@@ -342,8 +349,9 @@ io.on("connection", (socket) => {
       socket.emit("error", "Team not found on selling");
       return;
     }
-    
+
     socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: team.portfolio});
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
   });
 
   socket.on("disconnect", () => {
