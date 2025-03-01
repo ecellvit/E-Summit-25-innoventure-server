@@ -350,7 +350,9 @@ io.on("connection", (socket) => {
       return;
     }
 
+    console.log(team.portfolio);
     socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: team.portfolio});
+    console.log(team.wallet);
     socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
   });
 
