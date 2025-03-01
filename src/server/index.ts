@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
       return;
     }
 
-    const timeRemaining = 65 * 60 * 1000 - timePassed;
+    const timeRemaining = 10 * 60 * 1000 - timePassed;
 
     setTimeout(() => {
       const timer = setInterval(async () => {

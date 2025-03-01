@@ -4,6 +4,7 @@ export interface CurrentPage extends Document {
   creator?: boolean;
   round: number;
   page: number;
+  sellingStarted?: boolean;
   startedAt: Date;
 }
 
@@ -22,6 +23,10 @@ const CurrentPageSchema: Schema<CurrentPage> = new Schema(
       type: Number,
       required: true,
       default: 0,
+    },
+    sellingStarted: {
+      type: Boolean,
+      default: false,
     },
     startedAt: {
       type: Date,
