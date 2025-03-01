@@ -72,7 +72,15 @@ io.on("connection", (socket) => {
     }
     io.emit("marketPrice", {elementId: elementId, marketPrice: marketData.marketPrice})
 
-    
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
+
     const timer = setInterval(async () => {
       const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
       if (!team) {
@@ -102,7 +110,6 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 10*1000);
     
     setTimeout(async () => {
@@ -145,6 +152,8 @@ io.on("connection", (socket) => {
       socket.emit("error", "secondary rate not found");
       return;
     }
+    
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
 
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
@@ -161,7 +170,6 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 10*1000);
     
     setTimeout(async () => {
@@ -205,6 +213,8 @@ io.on("connection", (socket) => {
       return;
     }
 
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
+
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
         { teamLeaderEmail: sessionUser?.email },
@@ -220,7 +230,6 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 5*1000);
     
     setTimeout(async () => {
@@ -264,6 +273,8 @@ io.on("connection", (socket) => {
       return;
     }
 
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
+    
     const timer = setInterval(async () => {
       const updatedTeam = await TeamModelRound1.findOneAndUpdate(
         { teamLeaderEmail: sessionUser?.email },
@@ -279,7 +290,6 @@ io.on("connection", (socket) => {
       
       console.log("Updated team portfolio:", updatedTeam.portfolio);
       socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: updatedTeam.portfolio});
-      socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
     }, 5*1000);
     
     setTimeout(async () => {
@@ -350,9 +360,7 @@ io.on("connection", (socket) => {
       return;
     }
 
-    console.log(team.portfolio);
     socket.to(sessionUser?.email).emit("portfolioUpdate", {portfolio: team.portfolio});
-    console.log(team.wallet);
     socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
   });
 
