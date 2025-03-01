@@ -95,6 +95,7 @@ io.on("connection", (socket) => {
     const currentTime = Date.now();
 
     const timePassed = currentTime - startTime;
+    console.log(timePassed/1000);
 
     if (timePassed > 10 * 60 * 1000) {
       console.log("Primary element's round has ended");
@@ -105,6 +106,7 @@ io.on("connection", (socket) => {
     const timeRemaining = 65 * 60 * 1000 - timePassed;
 
     setTimeout(() => {
+      console.log("Primary Timer start");
       const timer = setInterval(async () => {
         const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
         if (!team) {
