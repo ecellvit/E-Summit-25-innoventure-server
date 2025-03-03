@@ -6,7 +6,7 @@ export interface IslandResourceModel extends Document {
   teamLeaderName: string;
   teamLeaderEmail: string;
   resourcesAvailable: number[];
-  maxResources: number[];
+  portfolio: number[];
 }
 
 const islandResourceSchema: Schema = new Schema({
@@ -31,9 +31,9 @@ const islandResourceSchema: Schema = new Schema({
     required: true,
     default: [],
   },
-  maxResources: {
+  portfolio: {
     type: [Number],
-    default: [],
+    default: [0, 0, 0, 0, 0],
   },
 }, { timestamps: true });
 
