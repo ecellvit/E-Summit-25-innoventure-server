@@ -10,7 +10,7 @@ export interface ServerToClientEvents {
   marketPrice: (data: {elementId: number, marketPrice: number}) => void;
   portfolioUpdate: (data: {portfolio: number[]}) => void;
   walletUpdate: (balance: number) => void;
-  calamityUpdate: () => void;
+  calamityUpdate: (island: number) => void;
 }
 
 export interface ClientToServerEvents {
@@ -21,7 +21,7 @@ export interface ClientToServerEvents {
   lease2: (elementId: number) => void;
   upgrade: () => void;
   sell: (data: {elementId: number, quantityLeft: number}) => void;
-  calamity: (data: {teamsEffected: string[]}) => void;
+  calamity: (data: {teamsEffected: string[], island: number}) => void;
 }
 
 export interface InterServerEvents {

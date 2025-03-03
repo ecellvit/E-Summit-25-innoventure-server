@@ -410,7 +410,7 @@ io.on("connection", (socket) => {
   });
 
   //* CALAMITY EVENT HANDLER *//
-  socket.on("calamity", async ({ teamsEffected })=> {
+  socket.on("calamity", async ({ teamsEffected, island })=> {
     for ( const leaderEmail of teamsEffected ) {
       console.log("CALAMITY ::", leaderEmail);
       const team = await TeamModelRound1.findOne({ teamLeaderEmail: leaderEmail });
@@ -420,7 +420,7 @@ io.on("connection", (socket) => {
         return;
       }
       
-      socket.to(leaderEmail).emit('calamityUpdate');
+      socket.to(leaderEmail).emit('calamityUpdate', island);
       socket.to(leaderEmail).emit("walletUpdate", team.wallet);
     }
   });
