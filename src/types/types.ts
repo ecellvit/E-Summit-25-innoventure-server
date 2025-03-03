@@ -22,6 +22,7 @@ export interface ClientToServerEvents {
   upgrade: () => void;
   sell: (data: {elementId: number, quantityLeft: number}) => void;
   calamity: (data: {teamsEffected: string[], island: number}) => void;
+  refine: (data: {island: number, setup: number}) => void;
 }
 
 export interface InterServerEvents {
