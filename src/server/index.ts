@@ -5,8 +5,10 @@ import { dbConnect } from "../lib/dbConnect";
 import { Users } from "../models/user.model";
 import MarketModel from "../models/event1/CommonInfo.model";
 import resourceData from "../constants/round1/element.json";
+import RefiningDetails from "../constants/round2/refinerySetup.json";
 import TeamModelRound1 from "../models/event1/event1Round1Team.model";
 import CurrentPageModel from "../models/event1/CurrentPage.model";
+import IslandResources from "../models/event1/islandResources.model";
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
@@ -425,6 +427,124 @@ io.on("connection", (socket) => {
     }
   });
   
+  //* REFINERY EVENT HANDLER *//
+  socket.on("refine", async ({ island, setup }) => {
+    if (island < 0 || island > 3) {
+      console.log("Invalid island number");
+      socket.emit("error", "Invalid island number");
+      return;
+    }
+
+    const islandConstants = RefiningDetails[island].metals;
+    const efficiencies = islandConstants.map(metal => metal.efficiency);
+
+    // OWN => (setup === 0)
+    // LOCAL => (setup === 1)
+    if (setup !== 0 && setup !== 1) {
+      console.log("Invalid setup number");
+      socket.emit("error", "Invalid setup number");
+      return;
+    }
+
+    const team = await TeamModelRound1.findOne({ teamLeaderEmail: sessionUser?.email });
+    if (!team) {
+      console.log("Team not found");
+      socket.emit("error", "Team not found");
+      return;
+    }
+    
+    socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
+
+    const currentRound = await CurrentPageModel.findOne({ creator: true });
+    if (!currentRound || currentRound.round !== 2 || currentRound.page !== 2) {
+      console.log("Current round not found");
+      socket.emit("error", "Current round not found");
+      return;
+    }
+
+    const islandData = await IslandResources.findOne({ teamLeaderEmail: sessionUser?.email, island: island });
+    if (!islandData) {
+      console.log("Island data not found");
+      socket.emit("error", "Island data not found");
+      return;
+    }
+
+    let resourcesAvailable = islandData.resourcesAvailable;
+    let portfolio = islandData.portfolio || [0, 0, 0, 0, 0];
+
+    const totalRoundTime = 25 * 60 * 1000;
+    const startTime = new Date(currentRound.startedAt).getTime();
+
+    const isTimeOver = (): boolean => {
+      const currentTime = Date.now();
+  
+      const timePassed = currentTime - startTime;
+      if (timePassed > totalRoundTime) {
+        console.log("Phase 2 has ended");
+        socket.emit("error", "Phase 2 has ended");
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    const areResourcesDepleted = () => {
+      return resourcesAvailable.every(resource => resource === 0);
+    };
+
+    // Add a parameter to control the delay
+    const startTimer = (setup: number) => {
+      // Initial delay based on setup
+      const initialDelay = setup === 0 ? 2 * 60 * 1000 : 0;
+      const setupRate = setup === 0 ? 10 : 13;
+      const miningRates = efficiencies.map(efficiency => efficiency * setupRate);
+      
+      // Use setTimeout for the initial delay
+      setTimeout(() => {
+        const timer = setInterval(async () => {
+          if (isTimeOver() || areResourcesDepleted()) {
+            clearInterval(timer);
+            console.log("Refining round has ended");
+            socket.emit("error", "Refining round has ended");
+            return;
+          } else {
+            for (let index = 0; index < miningRates.length; index++) {
+              const rate = miningRates[index];
+
+              if (resourcesAvailable[index] > rate) {
+                resourcesAvailable[index] -= rate;
+                portfolio[index] += rate;
+              } else {
+                portfolio[index] += resourcesAvailable[index];
+                resourcesAvailable[index] = 0;
+              }
+            }
+
+            const updatedIslandData = await IslandResources.findOneAndUpdate(
+              { teamLeaderEmail: sessionUser?.email, island: island },
+              { $set: 
+                { 
+                  portfolio: portfolio, 
+                  resourcesAvailable: resourcesAvailable
+                } 
+              },
+              { new: true }
+            );
+
+            if (!updatedIslandData) {
+              console.log("Island portfolio not updated");
+              socket.emit("error", "Island portfolio not updated");
+            }
+
+            socket.to(sessionUser?.email).emit('portfolioUpdate', {portfolio: portfolio});
+          }
+        }, 1 * 60 * 1000);
+      }, initialDelay);
+    };
+
+    startTimer(setup);
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });
