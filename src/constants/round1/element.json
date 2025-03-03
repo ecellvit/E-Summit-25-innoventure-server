@@ -1,37 +1,37 @@
 [
-    {
-      "id": 0,
-      "name": "Lithium",
-      "cost": 14000,
-      "rate": 8,
-      "base": 1313
-    },
-    {
-      "id": 1,
-      "name": "Iron",
-      "cost": 13000,
-      "rate": 9,
-      "base": 1082
-    },
-    {
-      "id": 2,
-      "name": "Cobalt",
-      "cost": 18000,
-      "rate": 4,
-      "base": 2795
-    },
-    {
-      "id": 3,
-      "name": "Nickel",
-      "cost": 15000,
-      "rate": 6,
-      "base": 1757
-    },
-    {
-      "id": 4,
-      "name": "Copper",
-      "cost": 20000,
-      "rate": 7,
-      "base": 1543
-    }
-  ]
+  {
+    "id": 0,
+    "name": "Lithium",
+    "cost": 14000,
+    "rate": 12,
+    "base": 1313
+  },
+  {
+    "id": 1,
+    "name": "Iron",
+    "cost": 13000,
+    "rate": 14,
+    "base": 1082
+  },
+  {
+    "id": 2,
+    "name": "Cobalt",
+    "cost": 18000,
+    "rate": 6,
+    "base": 2795
+  },
+  {
+    "id": 3,
+    "name": "Nickel",
+    "cost": 15000,
+    "rate": 9,
+    "base": 1757
+  },
+  {
+    "id": 4,
+    "name": "Copper",
+    "cost": 20000,
+    "rate": 11,
+    "base": 1543
+  }
+]
