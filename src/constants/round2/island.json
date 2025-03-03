@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "market": "ITHACA",
+    "distance_kms": 800,
+    "air_transport_cost_per_tn": 500,
+    "water_transport_cost_per_tn": 174,
+    "air_travel_time_secs": 80,
+    "water_travel_time_secs": 140
+  },
+  {
+    "id": 1,
+    "market": "DELOS",
+    "distance_kms": 1200,
+    "air_transport_cost_per_tn": 750,
+    "water_transport_cost_per_tn": 262,
+    "air_travel_time_secs": 120,
+    "water_travel_time_secs": 210
+  },
+  {
+    "id": 2,
+    "market": "SICILY",
+    "distance_kms": 900,
+    "air_transport_cost_per_tn": 562,
+    "water_transport_cost_per_tn": 196,
+    "air_travel_time_secs": 90,
+    "water_travel_time_secs": 160
+  },
+  {
+    "id": 3,
+    "market": "LEMNOS",
+    "distance_kms": 1100,
+    "air_transport_cost_per_tn": 688,
+    "water_transport_cost_per_tn": 240,
+    "air_travel_time_secs": 110,
+    "water_travel_time_secs": 190
+  }
+]

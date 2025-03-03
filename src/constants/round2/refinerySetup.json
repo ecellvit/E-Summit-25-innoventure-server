@@ -1,0 +1,51 @@
+[
+  {
+    "metals": [
+      {
+        "name": "Lithium",
+        "local_refining_cost": 198,
+        "service_tax": 35.64,
+        "total_local_refining_cost": 233.64,
+        "own_refinery_cost": 398,
+        "corporate_tax": 99.5,
+        "total_own_refining_cost": 497.5
+      },
+      {
+        "name": "Iron",
+        "local_refining_cost": 202,
+        "service_tax": 36.36,
+        "total_local_refining_cost": 238.36,
+        "own_refinery_cost": 401,
+        "corporate_tax": 100.25,
+        "total_own_refining_cost": 501.25
+      },
+      {
+        "name": "Cobalt",
+        "local_refining_cost": 199,
+        "service_tax": 35.82,
+        "total_local_refining_cost": 234.82,
+        "own_refinery_cost": 399,
+        "corporate_tax": 99.75,
+        "total_own_refining_cost": 498.75
+      },
+      {
+        "name": "Nickel",
+        "local_refining_cost": 201,
+        "service_tax": 36.18,
+        "total_local_refining_cost": 237.18,
+        "own_refinery_cost": 400,
+        "corporate_tax": 100,
+        "total_own_refining_cost": 500
+      },
+      {
+        "name": "Copper",
+        "local_refining_cost": 197,
+        "service_tax": 35.46,
+        "total_local_refining_cost": 232.46,
+        "own_refinery_cost": 397,
+        "corporate_tax": 99.25,
+        "total_own_refining_cost": 496.25
+      }
+    ]
+  }
+]

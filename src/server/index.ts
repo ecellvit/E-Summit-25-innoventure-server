@@ -409,6 +409,22 @@ io.on("connection", (socket) => {
     socket.to(sessionUser?.email).emit("walletUpdate", team.wallet);
   });
 
+  //* CALAMITY EVENT HANDLER *//
+  socket.on("calamity", async ({ teamsEffected })=> {
+    for ( const leaderEmail of teamsEffected ) {
+      console.log("CALAMITY ::", leaderEmail);
+      const team = await TeamModelRound1.findOne({ teamLeaderEmail: leaderEmail });
+      if (!team) {
+        console.log("Team not found on calamity");
+        socket.emit("error", "Team not found on calamity");
+        return;
+      }
+      
+      socket.to(leaderEmail).emit('calamityUpdate');
+      socket.to(leaderEmail).emit("walletUpdate", team.wallet);
+    }
+  });
+  
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
   });
