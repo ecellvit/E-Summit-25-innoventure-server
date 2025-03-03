@@ -167,7 +167,7 @@ io.on("connection", (socket) => {
         clearInterval(timer);
         console.log("Primary element timer stopped after 2 minutes");
         socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-      }, 65 * 60 * 1000);
+      }, 60 * 60 * 1000);
     }, timeRemaining)
   });
 
@@ -231,7 +231,7 @@ io.on("connection", (socket) => {
       secondaryTimer = null;
       console.log("Secondary element timer stopped after 2 minutes");
       socket.emit("timer", { message: "Timer stopped", timestamp: new Date() });
-    }, 65 * 60 * 1000);
+    }, 60 * 60 * 1000);
   });
 
   //* LEASE1 EVENT HANDLER *//
