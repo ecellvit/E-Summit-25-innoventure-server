@@ -536,7 +536,7 @@ io.on("connection", (socket) => {
               socket.emit("error", "Island portfolio not updated");
             }
 
-            socket.to(sessionUser?.email).emit('portfolioUpdate', {portfolio: portfolio});
+            socket.to(sessionUser?.email).emit('islandPortfolioUpdate', {portfolio: portfolio, island: island});
           }
         }, 1 * 60 * 1000);
       }, initialDelay);

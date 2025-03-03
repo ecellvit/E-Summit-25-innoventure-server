@@ -11,6 +11,7 @@ export interface ServerToClientEvents {
   portfolioUpdate: (data: {portfolio: number[]}) => void;
   walletUpdate: (balance: number) => void;
   calamityUpdate: (island: number) => void;
+  islandPortfolioUpdate: (data: {portfolio: number[], island: number}) => void;
 }
 
 export interface ClientToServerEvents {
