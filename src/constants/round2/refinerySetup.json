@@ -1,0 +1,38 @@
+[
+  {
+    "metals": [
+      { "name": "Lithium", "efficiency": 92, "local_refining_cost": 507, "service_tax": 101, "total_local_refining_cost": 608, "own_refinery_cost": 214, "corporate_tax": 51, "total_own_refining_cost": 265 },
+      { "name": "Iron", "efficiency": 78, "local_refining_cost": 492, "service_tax": 98, "total_local_refining_cost": 590, "own_refinery_cost": 202, "corporate_tax": 48, "total_own_refining_cost": 250 },
+      { "name": "Cobalt", "efficiency": 85, "local_refining_cost": 506, "service_tax": 101, "total_local_refining_cost": 607, "own_refinery_cost": 209, "corporate_tax": 50, "total_own_refining_cost": 259 },
+      { "name": "Nickel", "efficiency": 65, "local_refining_cost": 488, "service_tax": 97, "total_local_refining_cost": 585, "own_refinery_cost": 193, "corporate_tax": 46, "total_own_refining_cost": 239 },
+      { "name": "Copper", "efficiency": 72, "local_refining_cost": 496, "service_tax": 99, "total_local_refining_cost": 595, "own_refinery_cost": 198, "corporate_tax": 47, "total_own_refining_cost": 245 }
+    ]
+  },
+  {
+    "metals": [
+      { "name": "Lithium", "efficiency": 82, "local_refining_cost": 500, "service_tax": 105, "total_local_refining_cost": 605, "own_refinery_cost": 203, "corporate_tax": 50, "total_own_refining_cost": 253 },
+      { "name": "Iron", "efficiency": 67, "local_refining_cost": 486, "service_tax": 102, "total_local_refining_cost": 588, "own_refinery_cost": 194, "corporate_tax": 48, "total_own_refining_cost": 242 },
+      { "name": "Cobalt", "efficiency": 72, "local_refining_cost": 492, "service_tax": 103, "total_local_refining_cost": 595, "own_refinery_cost": 199, "corporate_tax": 49, "total_own_refining_cost": 248 },
+      { "name": "Nickel", "efficiency": 91, "local_refining_cost": 503, "service_tax": 105, "total_local_refining_cost": 608, "own_refinery_cost": 212, "corporate_tax": 53, "total_own_refining_cost": 265 },
+      { "name": "Copper", "efficiency": 79, "local_refining_cost": 495, "service_tax": 103, "total_local_refining_cost": 598, "own_refinery_cost": 207, "corporate_tax": 51, "total_own_refining_cost": 258 }
+    ]
+  },
+  {
+    "metals": [
+      { "name": "Lithium", "efficiency": 76, "local_refining_cost": 497, "service_tax": 109, "total_local_refining_cost": 606, "own_refinery_cost": 200, "corporate_tax": 52, "total_own_refining_cost": 252 },
+      { "name": "Iron", "efficiency": 92, "local_refining_cost": 506, "service_tax": 111, "total_local_refining_cost": 617, "own_refinery_cost": 213, "corporate_tax": 55, "total_own_refining_cost": 268 },
+      { "name": "Cobalt", "efficiency": 86, "local_refining_cost": 510, "service_tax": 112, "total_local_refining_cost": 622, "own_refinery_cost": 208, "corporate_tax": 54, "total_own_refining_cost": 262 },
+      { "name": "Nickel", "efficiency": 71, "local_refining_cost": 488, "service_tax": 107, "total_local_refining_cost": 595, "own_refinery_cost": 196, "corporate_tax": 50, "total_own_refining_cost": 246 },
+      { "name": "Copper", "efficiency": 63, "local_refining_cost": 485, "service_tax": 106, "total_local_refining_cost": 591, "own_refinery_cost": 194, "corporate_tax": 50, "total_own_refining_cost": 244 }
+    ]
+  },
+  {
+    "metals": [
+      { "name": "Lithium", "efficiency": 88, "local_refining_cost": 506, "service_tax": 116, "total_local_refining_cost": 622, "own_refinery_cost": 209, "corporate_tax": 56, "total_own_refining_cost": 265 },
+      { "name": "Iron", "efficiency": 67, "local_refining_cost": 492, "service_tax": 113, "total_local_refining_cost": 605, "own_refinery_cost": 193, "corporate_tax": 52, "total_own_refining_cost": 245 },
+      { "name": "Cobalt", "efficiency": 94, "local_refining_cost": 510, "service_tax": 117, "total_local_refining_cost": 627, "own_refinery_cost": 214, "corporate_tax": 57, "total_own_refining_cost": 271 },
+      { "name": "Nickel", "efficiency": 81, "local_refining_cost": 503, "service_tax": 115, "total_local_refining_cost": 618, "own_refinery_cost": 200, "corporate_tax": 54, "total_own_refining_cost": 254 },
+      { "name": "Copper", "efficiency": 74, "local_refining_cost": 488, "service_tax": 112, "total_local_refining_cost": 600, "own_refinery_cost": 198, "corporate_tax": 53, "total_own_refining_cost": 251 }
+    ]
+  }
+]

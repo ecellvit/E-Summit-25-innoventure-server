@@ -22,6 +22,12 @@ export interface round1Qualified extends Document {
     portfolio: number[];
     page: number;
     startTime: Date;
+    totalQuantity: number;
+    islandBatch1: (ObjectId | null)[];
+    islandBatch2: (ObjectId | null)[];
+    islandBatch3: (ObjectId | null)[];
+    insuranceType: number[];
+    batch: number;
 }
 
 const TeamSchema: Schema<round1Qualified> = new Schema(
@@ -103,8 +109,41 @@ const TeamSchema: Schema<round1Qualified> = new Schema(
         type: Date,
         default: Date.now,
     },
+    totalQuantity: 
+    {
+        type: Number,
+    },
+    islandBatch1: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "IslandRound2",
+          default:[],
+        },
+      ],
+      islandBatch2: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "IslandRound2",
+          default:[],
+        },
+      ],
+      islandBatch3: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "IslandRound2",
+          default:[],
+        },
+      ],
+    insuranceType: 
+    {
+        type: [Number],
+    },
+    batch:{
+        type: Number,
+        default:1,
+    }
 },
-    { collection: "TeamsEvent1Round1" }
+    { collection: "TeamsEvent1Round1",timestamp:true }
 );
 
 const TeamModelRound1 = (mongoose.models.TeamsEvent1Round1 as mongoose.Model<round1Qualified>) || (mongoose.model<round1Qualified>("TeamsEvent1Round1", TeamSchema));
