@@ -1,3 +1,4 @@
+//database
 import mongoose from "mongoose";
 
 type connectionObject = {
